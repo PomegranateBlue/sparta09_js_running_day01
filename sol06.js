@@ -1,23 +1,23 @@
-function applyCoupon(cart, coupon) {
-  cart.items.forEach((item) => {
-    item.price -= coupon.discount;
-  });
-}
+// function applyCoupon(cart, coupon) {
+//   cart.items.forEach((item) => {
+//     item.price -= coupon.discount;
+//   });
+// }
 
-const userACart = {
-  items: [
-    { name: "키보드", price: 30000 },
-    { name: "마우스", price: 20000 },
-  ],
-};
+// const userACart = {
+//   items: [
+//     { name: "키보드", price: 30000 },
+//     { name: "마우스", price: 20000 },
+//   ],
+// };
 
-const userBCart = userACart;
-const coupon = { discount: 5000 };
+// const userBCart = userACart;
+// const coupon = { discount: 5000 };
 
-applyCoupon(userBCart, coupon);
+// applyCoupon(userBCart, coupon);
 
-console.log(userACart.items);
-console.log(userBCart.items);
+// console.log(userACart.items);
+// console.log(userBCart.items);
 
 //1. 출력되는 값은 동일합니다. 객체 리터럴로 A유저에 대한 정보를 입력하고
 //해당 A유저의 정보를 B유저에 할당하여
@@ -32,3 +32,37 @@ console.log(userBCart.items);
 
 //3.B유저에게만 할인을 적용해야하므로 깊은 복사를 통해
 //객체에 해당하는 값들이 별도의 주소를 가리키도록 해야합니다
+//
+
+function applyCoupon(cart, coupon) {
+  cart.items.forEach((item) => {
+    item.price -= coupon.discount;
+  });
+}
+
+function copyObj(target) {
+  let result = {};
+  if (typeof target === "object" && target !== null) {
+    for (let prop in target) {
+      result[prop] = copyObj(target[prop]);
+    }
+  } else {
+    result = target;
+  }
+  return result;
+}
+
+const userACart = {
+  items: [
+    { name: "키보드", price: 30000 },
+    { name: "마우스", price: 20000 },
+  ],
+};
+
+const userBCart = copyObj(userACart);
+const coupon = { discount: 5000 };
+
+applyCoupon(userBCart, coupon);
+
+console.log(userACart.items);
+console.log(userBCart.items);
